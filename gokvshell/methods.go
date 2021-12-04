@@ -1,22 +1,25 @@
 package gokvshell
 
 // Get value for a key
-func (transactionStack *TransactionStack) get(key string) (string, error) {
-	topTransaction, err := transactionStack.topTransaction()
+func (transactionStack *TransactionStack) Get(key string) (string, error) {
+	topTransaction, err := transactionStack.TopTransaction()
 	if err != nil {
 		if val, ok := GLOBAL_STORE[key]; ok {
 			return val, nil
 		} else {
 			return "", KeyNotPresentError{}
 		}
+	} else if val, ok := topTransaction.store[key]; ok {
+		return val, nil
 	} else {
-		return topTransaction.store[key], nil
+		return "", KeyNotPresentError{}
+
 	}
 }
 
 // Set value of a key
-func (transactionStack *TransactionStack) set(key string, val string) {
-	topTransaction, err := transactionStack.topTransaction()
+func (transactionStack *TransactionStack) Set(key string, val string) {
+	topTransaction, err := transactionStack.TopTransaction()
 	if err != nil {
 		GLOBAL_STORE[key] = val
 	} else {
@@ -26,8 +29,8 @@ func (transactionStack *TransactionStack) set(key string, val string) {
 }
 
 // delete key-value
-func (transactionStack *TransactionStack) delete(key string) {
-	topTransaction, err := transactionStack.topTransaction()
+func (transactionStack *TransactionStack) Delete(key string) {
+	topTransaction, err := transactionStack.TopTransaction()
 	if err != nil {
 		delete(GLOBAL_STORE, key)
 	} else {
@@ -36,8 +39,8 @@ func (transactionStack *TransactionStack) delete(key string) {
 }
 
 // Commit changes made during the transaction
-func (transactionStack *TransactionStack) commit() error {
-	topTransaction, err := transactionStack.topTransaction()
+func (transactionStack *TransactionStack) Commit() error {
+	topTransaction, err := transactionStack.TopTransaction()
 	if err != nil {
 		return err
 	} else {
@@ -48,7 +51,7 @@ func (transactionStack *TransactionStack) commit() error {
 				GLOBAL_STORE[key] = val
 			}
 		}
-		preTopTransaction, preTopTransactionErr := transactionStack.preTopTransaction()
+		preTopTransaction, preTopTransactionErr := transactionStack.PreTopTransaction()
 		if preTopTransactionErr == nil {
 			for key, val := range topTransaction.store {
 				if val == "" {
@@ -64,8 +67,8 @@ func (transactionStack *TransactionStack) commit() error {
 }
 
 // Rollback changes made during transaction
-func (transactionStack *TransactionStack) rollback() error {
-	topTransaction, err := transactionStack.topTransaction()
+func (transactionStack *TransactionStack) Rollback() error {
+	topTransaction, err := transactionStack.TopTransaction()
 	if err != nil {
 		return err
 	} else {

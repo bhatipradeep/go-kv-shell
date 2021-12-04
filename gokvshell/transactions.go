@@ -29,7 +29,7 @@ func NewTransactionStack(limit int) *TransactionStack {
 }
 
 // Push a transaction to custom stack
-func (transactionStack *TransactionStack) pushTransaction(transaction *Transaction) error {
+func (transactionStack *TransactionStack) PushTransaction(transaction *Transaction) error {
 	if transactionStack.size == transactionStack.limit {
 		return TransactionStackFullError{}
 	}
@@ -39,7 +39,7 @@ func (transactionStack *TransactionStack) pushTransaction(transaction *Transacti
 }
 
 // Push a top transaction from custom stack
-func (transactionStack *TransactionStack) popTransaction() error {
+func (transactionStack *TransactionStack) PopTransaction() error {
 	if transactionStack.size == 0 {
 		return TransactionStackEmptyError{}
 	}
@@ -54,7 +54,7 @@ func (transactionStack *TransactionStack) popTransaction() error {
 }
 
 // Get top transaction from custom stack
-func (transactionStack *TransactionStack) topTransaction() (*Transaction, error) {
+func (transactionStack *TransactionStack) TopTransaction() (*Transaction, error) {
 	if transactionStack.size == 0 {
 		return nil, TransactionStackEmptyError{}
 	}
@@ -62,7 +62,7 @@ func (transactionStack *TransactionStack) topTransaction() (*Transaction, error)
 }
 
 // Get second transaction from top from custom stack
-func (transactionStack *TransactionStack) preTopTransaction() (*Transaction, error) {
+func (transactionStack *TransactionStack) PreTopTransaction() (*Transaction, error) {
 	if transactionStack.size < 2 {
 		return nil, TransactionNotFoundError{}
 	}

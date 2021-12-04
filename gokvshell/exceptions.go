@@ -23,3 +23,15 @@ type TransactionNotFoundError struct{}
 func (transactionNotFoundError TransactionNotFoundError) Error() string {
 	return "Transaction Not found !"
 }
+
+type InvalidSetArgumentsError struct{}
+
+func (invalidSetArgumentsError InvalidSetArgumentsError) Error() string {
+	return "Enter valid set argument. Ex. SET <key> <value>"
+}
+
+type InvalidGetArgumentsError struct{}
+
+func (invalidGetArgumentsError InvalidGetArgumentsError) Error() string {
+	return "Enter valid set argument. Ex. GET <key>"
+}
